@@ -11,14 +11,12 @@ alembic==1.12.1
 # Authentication & OAuth
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-python-oauth2==1.1.1
 authlib==1.2.1
 httpx==0.25.2
 
 # Email protocols
 aiosmtpd==1.4.4
-imaplib2==3.6
-poplib==0.1
+# Note: poplib and imaplib are built-in Python modules, no need to install
 
 # Email processing
 email-validator==2.1.0
@@ -34,7 +32,7 @@ aiofiles==23.2.1
 
 # Configuration and environment
 python-dotenv==1.0.0
-pydantic==2.5.0
+pydantic==2.5.3
 pydantic-settings==2.1.0
 
 # Security

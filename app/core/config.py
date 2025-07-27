@@ -4,7 +4,8 @@ Configuration settings for the Edaak Mail Server
 
 import os
 from typing import List, Optional
-from pydantic import BaseSettings, validator
+from pydantic_settings import BaseSettings
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -98,21 +99,24 @@ class Settings(BaseSettings):
     # CORS
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
     
-    @validator("MAIL_DOMAINS", pre=True)
+    @field_validator("MAIL_DOMAINS", mode="before")
+    @classmethod
     def parse_mail_domains(cls, v):
         """Parse mail domains string into list"""
         if isinstance(v, str):
             return [domain.strip() for domain in v.split(",")]
         return v
     
-    @validator("ALLOWED_ATTACHMENT_TYPES", pre=True)
+    @field_validator("ALLOWED_ATTACHMENT_TYPES", mode="before")
+    @classmethod
     def parse_attachment_types(cls, v):
         """Parse attachment types string into list"""
         if isinstance(v, str):
             return [ext.strip() for ext in v.split(",")]
         return v
     
-    @validator("OAUTH_PROVIDERS", pre=True)
+    @field_validator("OAUTH_PROVIDERS", mode="before")
+    @classmethod
     def parse_oauth_providers(cls, v):
         """Parse OAuth providers string into list"""
         if isinstance(v, str):
