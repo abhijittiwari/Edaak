@@ -3,7 +3,7 @@ Configuration settings for the Edaak Mail Server
 """
 
 import os
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
 
@@ -32,14 +32,14 @@ class Settings(BaseSettings):
     POP3S_PORT: int = 995
     
     # Email Configuration
-    MAIL_DOMAINS: str = "example.com,test.com"
+    MAIL_DOMAINS: Union[str, List[str]] = "example.com,test.com"
     DEFAULT_QUOTA_MB: int = 1000
     MAX_ATTACHMENT_SIZE_MB: int = 25
-    ALLOWED_ATTACHMENT_TYPES: str = ".pdf,.doc,.docx,.txt,.jpg,.png,.gif"
+    ALLOWED_ATTACHMENT_TYPES: Union[str, List[str]] = ".pdf,.doc,.docx,.txt,.jpg,.png,.gif"
     
     # OAuth Configuration
     OAUTH_ENABLED: bool = True
-    OAUTH_PROVIDERS: str = "azure_ad,clerk,keycloak"
+    OAUTH_PROVIDERS: Union[str, List[str]] = "azure_ad,clerk,keycloak"
     
     # Azure AD OAuth
     AZURE_AD_CLIENT_ID: Optional[str] = None
