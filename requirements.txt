@@ -1,7 +1,7 @@
 # Core web framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
-python-multipart==0.0.6
+python-multipart==0.0.9
 
 # Database
 sqlalchemy==2.0.23
@@ -11,23 +11,23 @@ alembic==1.12.1
 # Authentication & OAuth
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-authlib==1.2.1
-httpx==0.25.2
+authlib==1.3.1
+httpx==0.27.0
 
 # Email protocols
 aiosmtpd==1.4.4
 # Note: poplib and imaplib are built-in Python modules, no need to install
 
 # Email processing
-email-validator==2.1.0
-dnspython==2.4.2
+email-validator==2.1.1
+dnspython==2.6.1
 
 # Calendar and address book
 icalendar==5.0.7
 vobject==0.9.6.1
 
 # Web interface
-jinja2==3.1.2
+jinja2==3.1.4
 aiofiles==23.2.1
 
 # Configuration and environment
@@ -36,7 +36,7 @@ pydantic==2.5.3
 pydantic-settings==2.1.0
 
 # Security
-cryptography==41.0.8
+cryptography==42.0.8
 bcrypt==4.1.2
 
 # Utilities
