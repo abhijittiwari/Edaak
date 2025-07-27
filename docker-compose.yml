@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: edaak_postgres
+    environment:
+      POSTGRES_DB: edaak_mail
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis (optional, for caching)
+  redis:
+    image: redis:7-alpine
+    container_name: edaak_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Edaak Mail Server
+  edaak:
+    build: .
+    container_name: edaak_mail
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/edaak_mail
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_ENABLED=true
+      - DEBUG=false
+      - ENVIRONMENT=production
+    volumes:
+      - ./logs:/app/logs
+      - ./static:/app/static
+      - ./templates:/app/templates
+    ports:
+      - "8000:8000"  # Web interface
+      - "25:25"      # SMTP
+      - "143:143"    # IMAP
+      - "110:110"    # POP3
+      - "587:587"    # SMTP (submission)
+      - "993:993"    # IMAPS
+      - "995:995"    # POP3S
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx (optional, for SSL termination and load balancing)
+  nginx:
+    image: nginx:alpine
+    container_name: edaak_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - edaak
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data: 
