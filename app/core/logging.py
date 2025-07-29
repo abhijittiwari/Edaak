@@ -34,14 +34,24 @@ def setup_logging():
     console_handler.setFormatter(log_format)
     root_logger.addHandler(console_handler)
     
-    # File handler with rotation
-    file_handler = logging.handlers.RotatingFileHandler(
-        settings.LOG_FILE,
-        maxBytes=10 * 1024 * 1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setFormatter(log_format)
-    root_logger.addHandler(file_handler)
+    # File handler with rotation (optional)
+    try:
+        # Ensure logs directory exists
+        log_dir = os.path.dirname(settings.LOG_FILE)
+        if log_dir:
+            os.makedirs(log_dir, exist_ok=True)
+        
+        file_handler = logging.handlers.RotatingFileHandler(
+            settings.LOG_FILE,
+            maxBytes=10 * 1024 * 1024,  # 10MB
+            backupCount=5
+        )
+        file_handler.setFormatter(log_format)
+        root_logger.addHandler(file_handler)
+        print(f"Logging to file: {settings.LOG_FILE}")
+    except (PermissionError, OSError) as e:
+        print(f"Warning: Could not create log file {settings.LOG_FILE}: {e}")
+        print("Continuing with console logging only...")
     
     # Set specific loggers
     logging.getLogger("uvicorn").setLevel(logging.INFO)
