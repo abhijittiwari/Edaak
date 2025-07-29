@@ -25,7 +25,7 @@ from app.webmail.routes import webmail_router
 from app.protocols.smtp_server import start_smtp_server
 from app.protocols.imap_server import start_imap_server
 from app.protocols.pop3_server import start_pop3_server
-from app.services.admin_service import create_default_admin
+from app.services.admin_service import AdminService
 
 # Setup logging
 setup_logging()
@@ -48,7 +48,7 @@ async def lifespan(app: FastAPI):
     
     # Create default admin if first run
     if settings.FIRST_RUN:
-        await create_default_admin()
+        await AdminService.create_default_admin()
         logger.info("Default admin account created")
     
     # Start protocol servers
