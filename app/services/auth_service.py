@@ -73,7 +73,35 @@ class AuthService:
             user.last_login = datetime.utcnow()
             db.commit()
             
-            return user
+            # Access all user attributes while session is active to avoid DetachedInstanceError
+            user_data = {
+                'id': user.id,
+                'email': user.email,
+                'username': user.username,
+                'is_admin': user.is_admin,
+                'is_superuser': user.is_superuser,
+                'auth_provider': user.auth_provider,
+                'status': user.status,
+                'created_at': user.created_at,
+                'updated_at': user.updated_at,
+                'last_login': user.last_login
+            }
+            
+            # Create a new User object with the data (not attached to session)
+            detached_user = User(
+                id=user_data['id'],
+                email=user_data['email'],
+                username=user_data['username'],
+                is_admin=user_data['is_admin'],
+                is_superuser=user_data['is_superuser'],
+                auth_provider=user_data['auth_provider'],
+                status=user_data['status'],
+                created_at=user_data['created_at'],
+                updated_at=user_data['updated_at'],
+                last_login=user_data['last_login']
+            )
+            
+            return detached_user
             
         except Exception as e:
             logger.error(f"Error authenticating user {username}: {e}")
