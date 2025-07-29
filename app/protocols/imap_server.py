@@ -5,9 +5,9 @@ IMAP server implementation
 import asyncio
 import logging
 import email
+import imaplib
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
-from aioimaplib import aioimaplib
 
 from app.core.config import settings
 from app.services.email_service import EmailService
